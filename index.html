@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GenWave — self-hosted internet radio, on air in one line</title>
+  <meta name="description" content="GenWave is a self-hosted internet radio station for your own music library — loudness-matched, crossfaded, never silent, with a DJ who talks between the tracks.">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="stylesheet" href="/assets/css/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="wrap">
+      <a class="wordmark" href="/">GenWave</a>
+      <nav aria-label="Primary">
+        <a href="#install">Install</a>
+        <a href="#script">The script</a>
+        <a href="#credits">Standing on</a>
+        <a href="https://github.com/GenWave-Org/genwave">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1">
+    <section class="hero">
+      <div class="wrap">
+        <div class="hero-panel">
+          <p class="eyebrow"><span class="on-air-dot" aria-hidden="true"></span> Self-hosted internet radio</p>
+          <h1>GenWave</h1>
+          <p class="lede">Turns your own music library into a real radio station: one shared broadcast stream, loudness-matched so quiet and loud tracks play back even, crossfaded so the silence never happens.</p>
+          <p class="lede secondary">And there's a DJ — one who actually knows what's playing, and tells you about it between the tracks.</p>
+          <div class="cta-row">
+            <a class="btn btn-primary" href="#install">Get the one-liner</a>
+            <a class="btn btn-secondary" href="https://demo.genwaveradio.com/">Hear the demo</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="stat-slot wrap">
+      <div class="stat-card" role="group" aria-label="Cold start time, not yet measured">
+        <span class="stat-label">On air in</span>
+        <span class="stat-value">—:—</span>
+        <p class="stat-caption">measured on real hardware — number lands when the stopwatch does</p>
+      </div>
+    </div>
+
+    <section id="install" class="wrap">
+      <h2>One line. On air.</h2>
+      <p class="section-lede">Docker and a music library are the only prerequisites. This clones GenWave at its latest release and hands off to its own setup wizard — no sudo, anywhere in the path.</p>
+      <div class="code-copy">
+        <pre><code id="one-liner">curl -fsSL https://install.genwaveradio.com/install.sh | bash</code></pre>
+        <button type="button" class="copy-btn" data-copy-target="one-liner">Copy</button>
+      </div>
+      <p class="fineprint">Shortens to just <code>curl -fsSL https://install.genwaveradio.com | bash</code> once the redirect rule is in place — it's the identical script either way, and the full path above works today.</p>
+    </section>
+
+    <section id="script" class="wrap">
+      <h2>Read it first</h2>
+      <p class="section-lede">Piping a stranger's script into a shell is a leap of faith. Don't take it blind — this is loaded live from <code>/install.sh</code> on this same server, so what you read here is exactly what the one-liner above runs. Plain bash, no obfuscation, no sudo.</p>
+      <p id="script-loading" class="fineprint" hidden>Loading install.sh…</p>
+      <pre id="script-body" class="script-body" hidden></pre>
+      <p id="script-fallback" class="fineprint" hidden>Couldn't load it inline right now — <a href="/install.sh">view install.sh directly</a>.</p>
+      <noscript>
+        <p class="fineprint">JavaScript is off, so the script isn't fetched inline here — <a href="/install.sh">view install.sh directly</a>.</p>
+      </noscript>
+    </section>
+
+    <section class="links wrap">
+      <h2>Look inside</h2>
+      <ul>
+        <li><a href="https://demo.genwaveradio.com/">Live demo</a> — <span>tune in, watch what's on the air, ask the station for a song</span></li>
+        <li><a href="https://github.com/GenWave-Org/genwave">Source on GitHub</a> — <span>AGPL-3.0, every line readable, issues and PRs welcome</span></li>
+      </ul>
+    </section>
+
+    <section id="credits" class="wrap">
+      <h2>Standing on</h2>
+      <p class="section-lede">GenWave is a control plane, not a from-scratch audio engine. It's wired around real infrastructure that did the hard parts first.</p>
+      <ul class="credit-grid">
+        <li>
+          <a href="https://www.liquidsoap.info/">Liquidsoap</a>
+          <p>Real-time mixing, crossfade, and encode — the actual audio spine underneath everything GenWave decides to play.</p>
+        </li>
+        <li>
+          <a href="https://icecast.org/">Icecast</a>
+          <p>Fans the mixed stream out to every listener, reliably, at whatever scale the station needs.</p>
+        </li>
+        <li>
+          <a href="https://github.com/hexgrad/kokoro">Kokoro</a>
+          <p>The primary DJ voice — an open-weight TTS model, rendered locally, no cloud voice API.</p>
+        </li>
+        <li>
+          <a href="https://github.com/rhasspy/piper">Piper</a>
+          <p>A fast, CPU-only local voice — the fallback that keeps a DJ talking on modest hardware.</p>
+        </li>
+        <li>
+          <a href="https://ollama.com/">Ollama</a>
+          <p>Runs the local LLM that writes lead-ins and back-announces when you point GenWave at one — the station airs template patter without it.</p>
+        </li>
+        <li>
+          <a href="https://ffmpeg.org/">ffmpeg</a>
+          <p>Loudness, cue points, energy analysis — the numbers every crossfade decision rests on.</p>
+        </li>
+        <li>
+          <a href="https://aubio.org/">aubio</a>
+          <p>The BPM analysis under the hood, one more measurement the catalog remembers per track.</p>
+        </li>
+        <li>
+          <a href="https://www.postgresql.org/">PostgreSQL</a>
+          <p>The catalog of record — every track, every measurement, every scheduled show.</p>
+        </li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p>GenWave Home is AGPL-3.0-only. <a href="https://github.com/GenWave-Org/genwave">GitHub</a> · <a href="https://github.com/GenWave-Org/genwave/blob/main/LICENSE">License</a></p>
+    </div>
+  </footer>
+
+  <script src="/assets/js/main.js"></script>
+</body>
+</html>
