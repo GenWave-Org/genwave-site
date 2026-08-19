@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>GenWave — self-hosted internet radio, on air in one line</title>
   <meta name="description" content="GenWave is a self-hosted internet radio station for your own music library — loudness-matched, crossfaded, never silent, with a DJ who talks between the tracks.">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'">
   <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
   <link rel="stylesheet" href="/assets/css/style.css">
 </head>
@@ -23,7 +24,7 @@
     </div>
   </header>
 
-  <main id="main">
+  <main id="main" tabindex="-1">
     <section class="hero">
       <div class="wrap">
         <div class="hero-panel">
@@ -54,7 +55,7 @@
         <pre><code id="one-liner">curl -fsSL https://install.genwaveradio.com/install.sh | bash</code></pre>
         <button type="button" class="copy-btn" data-copy-target="one-liner">Copy</button>
       </div>
-      <p class="fineprint">Shortens to just <code>https://install.genwaveradio.com | bash</code> once the DNS redirect is in place — it's the identical script either way, and the full path above works today.</p>
+      <p class="fineprint">Shortens to just <code>curl -fsSL https://install.genwaveradio.com | bash</code> once the redirect rule is in place — it's the identical script either way, and the full path above works today.</p>
     </section>
 
     <section id="script" class="wrap">
@@ -98,7 +99,7 @@
         </li>
         <li>
           <a href="https://ollama.com/">Ollama</a>
-          <p>Runs the local LLM that writes lead-ins and back-announces, entirely on your own box.</p>
+          <p>Runs the local LLM that writes lead-ins and back-announces when you point GenWave at one — the station airs template patter without it.</p>
         </li>
         <li>
           <a href="https://ffmpeg.org/">ffmpeg</a>

@@ -38,7 +38,6 @@
   --accent: #B94F29;
   --accent-ink: #FDF8EE;
   --accent-2: #6F632F;
-  --success: #5C7A3F;
 
   --font-display: "Fraunces", ui-serif, Georgia, "Times New Roman", serif;
   --font-body: "Source Sans 3", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
@@ -57,12 +56,15 @@
     --accent: #D96A3D;
     --accent-ink: #1E1713;
     --accent-2: #B3A25E;
-    --success: #8FAE6A;
   }
 }
 
 * {
   box-sizing: border-box;
+  /* No typeface here has a synthesized italic/bold worth showing — a class
+     that requests a weight/style with no real face should fail visibly
+     (fall back upright/regular) rather than render a faux-slanted fake. */
+  font-synthesis: none;
 }
 
 html {
@@ -333,6 +335,7 @@ section h2 {
   margin: 0;
   color: var(--mute);
   font-size: 0.92rem;
+  font-family: var(--font-display);
   font-style: italic;
 }
 

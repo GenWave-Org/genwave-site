@@ -29,7 +29,7 @@ Full license text: <https://openfontlicense.org/open-font-license-official-text/
 ## Fetch provenance
 
 Fetched once from Google Fonts' CDN (`fonts.gstatic.com`) on 2026-08-19 via the
-`css2` API's `latin`-subset static-instance URLs, then committed — no runtime
+`css2` API's `latin`-subset variable-font URLs, then committed — no runtime
 dependency on Google's servers remains. Exact source URLs, for audit:
 
 ```
