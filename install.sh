@@ -27,6 +27,12 @@
 # flaky curl) leaves the function definition syntactically incomplete — bash refuses to define
 # it at all, so nothing in it ever runs. Only a cut landing at-or-past the final `main "$@"`
 # line runs the real thing, in full.
+#
+# A `curl | sh` typo on a dash system would otherwise die silently once `set -o pipefail`
+# below hits a shell that doesn't have it — this next line is plain POSIX (no bashisms reached
+# yet) so dash parses it fine and gives an honest message instead. Kept the literal first
+# executable line.
+[ -n "${BASH_VERSION:-}" ] || { echo "install.sh: run this with bash (curl -fsSL ... | bash)" >&2; exit 1; }
 set -euo pipefail
 
 resolve_ref() {
@@ -102,7 +108,7 @@ is_genwave_checkout() {
 }
 
 run_setup() {
-  cd "$1"
+  cd -- "$1"
   if [ -n "${GW_INSTALL_NO_EXEC:-}" ]; then
     echo "GW_INSTALL_NO_EXEC set — would exec ./setup.sh in $1 now." >&2
     exit 0
@@ -110,13 +116,16 @@ run_setup() {
   # curl|bash (and `cat install.sh | bash`) hand THIS script's own body to bash over stdin —
   # bash then reports $0 as bash/sh rather than a file path. That means stdin is already spent
   # before setup.sh's own interactive interview (its stdin answer channel) ever gets a turn, so
-  # fd 0 is re-pointed at the controlling terminal for the child in that case only, and only
-  # when stdin isn't already a terminal itself. A file invocation (`bash install.sh`, optionally
-  # `< answers.txt` for a scripted interview) keeps $0 == the script's path — stdin there is the
-  # caller's own deliberate choice, left untouched.
+  # fd 0 is re-pointed at the controlling terminal for the child in that case only. Three
+  # conditions have to hold, not just $0: stdin isn't already a terminal (nothing to fix), AND
+  # stdin is a literal PIPE (checked via /dev/stdin — portable across Linux/macOS, unlike the
+  # Linux-only /proc/self/fd/0) rather than a redirected file. That last check is what keeps
+  # `bash -c "$(curl ...)" < answers.txt` honest: $0 is "bash" there too, but stdin is a real
+  # file, not a pipe, so it's left alone — same as the plainer `bash install.sh < answers.txt`
+  # file invocation. Only an actual pipe (curl|bash, `cat install.sh | bash`) gets the swap.
   case "$0" in
     bash|-bash|sh|-sh)
-      if [ ! -t 0 ]; then
+      if [ ! -t 0 ] && [ -p /dev/stdin ]; then
         { exec 0<> /dev/tty; } 2>/dev/null || true
       fi
       ;;
@@ -130,6 +139,8 @@ main() {
     echo "Re-run with HOME set, or answer the directory prompt interactively." >&2
     exit 1
   fi
+  # Deliberately not `local` — resolve_ref and prompt_target_dir (defined above, called below)
+  # both read these as globals.
   REPO_URL="${GW_INSTALL_REPO:-https://github.com/GenWave-Org/genwave.git}"
   DEFAULT_DIR="$HOME/genwave"
 
