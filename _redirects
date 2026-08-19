@@ -1,0 +1,18 @@
+# Cloudflare Pages _redirects — deliberately empty of rules.
+#
+# The plan was a host-based rule routing install.genwaveradio.com/* to
+# download.genwaveradio.com/install.sh. Cloudflare Pages' _redirects file does not support
+# that: "Domain-level redirects" are explicitly listed as unsupported —
+# https://developers.cloudflare.com/pages/configuration/redirects/#advanced-redirects
+# (matches our exact shape: `install.genwaveradio.com/* install.genwaveradio.com/... 301`).
+# _redirects only matches on path, and both custom domains serve the same Pages deployment, so
+# a path rule here would apply identically to both hosts — it can't tell them apart.
+#
+# The split is handled at the zone instead: a Cloudflare Redirect Rule (Rules > Overview >
+# Create rule > Redirect Rule) matching hostname install.genwaveradio.com, forwarding to
+# https://download.genwaveradio.com/install.sh (301). That rule runs before Pages ever sees the
+# request, needs no Functions/Worker (F133.4: static only), and is Dean's one-time dashboard
+# click — see the T323 PR description for the exact steps.
+#
+# install.sh itself lives at the repo root either way, so /install.sh resolves on both domains
+# without any redirect at all — this file exists just to record why it stays empty.
